@@ -1,0 +1,21 @@
+<!-- index.html (AWS EC2) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livestream</title>
+</head>
+<body>
+    <video id="livestream" autoplay></video>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://tudireccionipdeaws:5000');
+        var video = document.getElementById('livestream');
+
+        socket.on('livestream', function(data) {
+            video.src = 'data:image/jpeg;base64,' + data.frame;
+        });
+    </script>
+</body>
+</html>
