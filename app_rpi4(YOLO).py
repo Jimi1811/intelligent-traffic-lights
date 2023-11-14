@@ -17,6 +17,7 @@ import numpy as np
 #################################################################
 
 # Configuración de OpenCV con YOLOv3
+# descargar yolo3.weights --> https://pjreddie.com/media/files/yolov3.weights
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 classes = []
 with open("coco.names", "r") as f:
