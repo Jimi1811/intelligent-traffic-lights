@@ -157,3 +157,69 @@ def traffic_light_sequence():
 	    Mucho_trafico()
 	else:
 		Poco_trafico()
+
+
+############################################################
+######################## Main loop #########################
+############################################################
+
+
+int __name__ == "__main__":
+
+		try:
+		    ### Mantiene la camara encendida
+		    while True:
+				# captura de frames
+		        im= picam2.capture_array()
+		        im=cv2.flip(im,-1)
+		        image = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
+		        image = image.resize((width, height))
+
+		
+				# objeto detectados
+		        top_result = process_image(interpreter, image, input_index)
+				     	# top_result = [
+					    # {'pos': [y1, x1, y2, x2], 'id': clase1, 'confidence': confianza1},
+					    # {'pos': [y1, x1, y2, x2], 'id': clase2, 'confidence': confianza2},
+					    # # ... otros objetos detectados ...
+						# ]
+		
+            	# Calcular el tiempo transcurrido
+            	elapsed_time = time.time() - start_time
+
+				# Calcular los FPS
+            	fps = frame_count / elapsed_time
+		
+		        # mostrar resultados
+				display_result(top_result, im, labels, fps)
+
+				# Incrementar el contador de cuadros
+            	frame_count += 1
+
+            	# Mostrar los FPS en la consola
+            	print(f"FPS: {fps:.2f}")
+
+				# Mostrar el conteo y accionar LEDs
+				print("Conteo de objetos detectados:")
+				for label, count in object_count.items(): # dict_items([('Persona', 3), ('Automóvil', 5), ('Camión', 2)])
+					if label == 'car' or label == 'truck':
+				    	print(f"{label}: {count}")
+				    	traffic_light_sequence(object_count[label])
+
+				# condicion de paro
+		        key = cv2.waitKey(1)
+		        if key == 27:  # esc
+		            break
+		
+		except KeyboardInterrupt:
+			# Manejo de la interrupción por teclado (Ctrl+C)
+		    print("Programa detenido por el usuario.")
+				
+		finally:
+	    	### Limpieza de recursos
+	    	cv2.destroyAllWindows()
+			### Limpia los pines GPIO al salir del programa
+	    	GPIO.cleanup()
+			### detiene la camara
+	    	picam2.stop()
+	    	
