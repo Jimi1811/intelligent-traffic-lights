@@ -48,8 +48,8 @@ picam2.start() # inicializar camara
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
 
-model_path='/home/pi/tensorflow/efficientdet_lite0.tflite' # colocar ruta modelo
-label_path='/home/pi/tensorflow/labels.txt'# colocar ruta etiquetas
+model_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/efficientdet_lite0.tflite' # colocar ruta modelo
+label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/labels.txt'# colocar ruta etiquetas
 
 ############################################################
 ######################## definir funciones #################
@@ -118,40 +118,41 @@ def display_result(result, frame, labels, fps):
         
 		# Incrementar el conteo de vehiculos detectados
         if d == 2 or d == 5 or d == 7: # si detecta carros, buses o camiones
-        	object_count[d] += 1
-
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
-		text_1 = f'vehicle -- {confidence:.2%}'  # Agrega la etiqueta de la clase y 
-											   					 # el porcentaje de confiabilidad al texto
-											   					 # considerando 2 decimales
-		text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
-        cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
-        cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
+            object_count[d] += 1
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
+            
+            text_1 = f'vehicle -- {confidence:.2%}'  # Agrega la etiqueta de la clase y 
+                                                                     # el porcentaje de confiabilidad al texto
+                                                                     # considerando 2 decimales
+            text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
+            cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
+            cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
+            
     cv2.imshow('Object Detection', frame)
     N_carros = object_count[d]
     return N_carros
 
 ### Definir la sincronizacion de los semaforos
 def Poco_trafico():
-		GPIO.output(green_led_pin, GPIO.HIGH)
-	    time.sleep(30)
-	    GPIO.output(green_led_pin, GPIO.LOW)
-	    GPIO.output(yellow_led_pin, GPIO.HIGH)
-	    time.sleep(5)
-	    GPIO.output(yellow_led_pin, GPIO.LOW)
-	    GPIO.output(red_led_pin, GPIO.HIGH)
-	    time.sleep(30)
-	    GPIO.output(red_led_pin, GPIO.LOW)
+	GPIO.output(green_led_pin, GPIO.HIGH)
+	time.sleep(30)
+	GPIO.output(green_led_pin, GPIO.LOW)
+	GPIO.output(yellow_led_pin, GPIO.HIGH)
+	time.sleep(5)
+	GPIO.output(yellow_led_pin, GPIO.LOW)
+	GPIO.output(red_led_pin, GPIO.HIGH)
+	time.sleep(30)
+	GPIO.output(red_led_pin, GPIO.LOW)
 def Mucho_trafico():
-		GPIO.output(green_led_pin, GPIO.HIGH)
-	    time.sleep(10)
-	    GPIO.output(green_led_pin, GPIO.LOW)
-	    GPIO.output(yellow_led_pin, GPIO.HIGH)
-	    time.sleep(5)
-	    GPIO.output(yellow_led_pin, GPIO.LOW)
-	    GPIO.output(red_led_pin, GPIO.HIGH)
-	    time.sleep(10)
-	    GPIO.output(red_led_pin, GPIO.LOW)
+	GPIO.output(green_led_pin, GPIO.HIGH)
+	time.sleep(10)
+	GPIO.output(green_led_pin, GPIO.LOW)
+	GPIO.output(yellow_led_pin, GPIO.HIGH)
+	time.sleep(5)
+	GPIO.output(yellow_led_pin, GPIO.LOW)
+	GPIO.output(red_led_pin, GPIO.HIGH)
+	time.sleep(10)
+	GPIO.output(red_led_pin, GPIO.LOW)
 def traffic_light_sequence():
 	if car_count >= 5:
 	    Mucho_trafico()
@@ -164,7 +165,7 @@ def traffic_light_sequence():
 ############################################################
 
 
-int __name__ == "__main__":
+if __name__ == "__main__":
 
 		try:
 		    ### Mantiene la camara encendida
