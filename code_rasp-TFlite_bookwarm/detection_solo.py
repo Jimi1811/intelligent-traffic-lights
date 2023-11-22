@@ -104,7 +104,7 @@ def process_image(interpreter, image, input_index):
     return result # retorna solo las detecciones confiables {posicion, clase}
 
 ### dibujar los bounding boxes
-def display_result(result, frame, labels, fps):
+def display_result(result, frame, labels, fps, object_count):
     
     for obj in result:
         pos = obj['pos']
@@ -178,8 +178,12 @@ if __name__ == "__main__":
 		width = input_shape[2]
 
 		input_index = input_details[0]['index']
+
 		start_time = 0 # inicializa el tiempo
-		
+		frame_count = 0 # inicializa conteo de frames
+		object_count = {label: 0 for label in labels.values()} # inicializa la cantidad de autos
+
+
 		### Mantiene la camara encendida
 		while True:
 			# captura de frames
@@ -204,7 +208,7 @@ if __name__ == "__main__":
 			fps = frame_count / elapsed_time
 	
 			# mostrar resultados
-			display_result(top_result, im, labels, fps)
+			N_carros = display_result(top_result, im, labels, fps, object_count)
 
 			# Incrementar el contador de cuadros
 			frame_count += 1
