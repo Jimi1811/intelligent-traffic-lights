@@ -152,8 +152,3 @@ def Mucho_trafico():
 	    GPIO.output(red_led_pin, GPIO.HIGH)
 	    time.sleep(10)
 	    GPIO.output(red_led_pin, GPIO.LOW)
-def traffic_light_sequence():
-	if car_count >= 5:
-	    Mucho_trafico()
-	else:
-		Poco_trafico()

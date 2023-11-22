@@ -47,7 +47,6 @@ def generate_stream():
         frame_data = base64.b64encode(frame.read()).decode('utf-8')
         frame.seek(0)
 
-        # Realizar la detección de objetos
         image = preprocess_image(frame_data)  # Implementa la función según las necesidades de tu modelo
         detections = run_inference(image)
 
