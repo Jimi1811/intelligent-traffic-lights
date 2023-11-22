@@ -45,8 +45,8 @@ picam2.start() # inicializar camara
 ######################## definir rutas #####################
 ############################################################
 
-CAMERA_WIDTH = 640
-CAMERA_HEIGHT = 480
+width = 640
+height = 480
 
 model_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/efficientdet_lite0.tflite' # colocar ruta modelo
 label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/labels.txt'# colocar ruta etiquetas
