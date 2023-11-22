@@ -84,9 +84,9 @@ def process_image(interpreter, image, input_index):
     # Get outputs
     output_details = interpreter.get_output_details() # obtener info de las detecciones
 	    # output_details[0]['name']: El nombre del tensor.
-	    # output_details[0]['shape']: La forma del tensor (número de dimensiones y tamaño en cada dimensión).
+	    # output_details[0]['shape']: La forma del tensor (nÃºmero de dimensiones y tamaÃ±o en cada dimensiÃ³n).
 	    # output_details[0]['dtype']: El tipo de datos del tensor (por ejemplo, np.float32).
-	    # output_details[0]['index']: El índice del tensor que se utilizará con métodos como interpreter.get_tensor().
+	    # output_details[0]['index']: El Ã­ndice del tensor que se utilizarÃ¡ con mÃ©todos como interpreter.get_tensor().
 
     positions = np.squeeze(interpreter.get_tensor(output_details[0]['index'])) # vectores de posicion
     classes = np.squeeze(interpreter.get_tensor(output_details[1]['index'])) # clases detectadas
@@ -113,7 +113,7 @@ def display_result(result, frame, labels, fps):
         x2 = int(pos[3] * CAMERA_WIDTH)
         y1 = int(pos[0] * CAMERA_HEIGHT)
         y2 = int(pos[2] * CAMERA_HEIGHT)
-        d=labels[id] # Utiliza la identificación de la clase (id) para obtener 
+        d=labels[id] # Utiliza la identificaciÃ³n de la clase (id) para obtener 
         			 # la etiqueta de la clase (d) desde el diccionario de etiquetas (labels).
         
 		# Incrementar el conteo de vehiculos detectados
@@ -166,8 +166,20 @@ def traffic_light_sequence():
 
 
 if __name__ == "__main__":
-
+	
 	try:
+		interpreter = load_model(model_path)
+		labels = load_labels(label_path)
+
+		input_details = interpreter.get_input_details()
+
+		input_shape = input_details[0]['shape']
+		height = input_shape[1]
+		width = input_shape[2]
+
+		input_index = input_details[0]['index']
+		start_time = 0 # inicializa el tiempo
+		
 		### Mantiene la camara encendida
 		while True:
 			# captura de frames
@@ -202,7 +214,7 @@ if __name__ == "__main__":
 
 			# Mostrar el conteo y accionar LEDs
 			print("Conteo de objetos detectados:")
-			for label, count in object_count.items(): # dict_items([('Persona', 3), ('Automóvil', 5), ('Camión', 2)])
+			for label, count in object_count.items(): # dict_items([('Persona', 3), ('AutomÃ³vil', 5), ('CamiÃ³n', 2)])
 				if label == 'car' or label == 'truck':
 					print(f"{label}: {count}")
 					traffic_light_sequence(object_count[label])
@@ -213,7 +225,7 @@ if __name__ == "__main__":
 				break
 	
 	except KeyboardInterrupt:
-		# Manejo de la interrupción por teclado (Ctrl+C)
+		# Manejo de la interrupciÃ³n por teclado (Ctrl+C)
 		print("Programa detenido por el usuario.")
 			
 	finally:
@@ -223,4 +235,3 @@ if __name__ == "__main__":
 		GPIO.cleanup()
 		### detiene la camara
 		picam2.stop()
-	    	
