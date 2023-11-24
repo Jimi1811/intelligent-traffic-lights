@@ -1,4 +1,8 @@
-pymysql
+pymsql
 flask
-Flask-SocketIO
-picamera
+
+picamera2
+tensorflow
+cvzone
+opencv-python
+
