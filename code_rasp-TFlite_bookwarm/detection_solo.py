@@ -12,6 +12,7 @@ from picamera2 import Picamera2
 import RPi.GPIO as GPIO
 import time
 
+"""
 ############################################################
 ######################## configura de los LEDs #############
 ############################################################
@@ -26,6 +27,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(red_led_pin, GPIO.OUT) # seteo rojo
 GPIO.setup(yellow_led_pin, GPIO.OUT) # seteo ambar
 GPIO.setup(green_led_pin, GPIO.OUT) # seteo verde
+"""
 
 ############################################################
 ######################## configura la camara ###############
@@ -55,13 +57,13 @@ label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/label
 
 ### cargar etiquetas
 def load_labels(label_path):
-    r"""Returns a list of labels"""
-    with open(label_path) as f:
-        labels = {} # diccioonario de etiquetas {id:__, class:__}
-        for line in f.readlines():
-            m = re.match(r"(\d+)\s+(\w+)", line.strip())
-            labels[int(m.group(1))] = m.group(2)
-        return labels # returna el diccionario de etiquetas
+	r"""Returns a list of labels"""
+	with open(label_path) as f:
+		labels = {} # diccioonario de etiquetas {id:__, class:__}
+		for line in f.readlines():
+			m = re.match(r"(\d+)\s+(\w+)", line.strip())
+			labels[int(m.group(1))] = m.group(2)
+	return labels # returna el diccionario de etiquetas
 
 ### cargar modelo
 def load_model(model_path):
@@ -98,26 +100,27 @@ def process_image(interpreter, image, input_index):
     
 ### dibujar los bounding boxes
 def display_result(result, frame, labels, fps, N_carros):
-    for obj in result:
-        pos = obj['pos']
-        clase = obj['id']
-        confidence = obj['confidence']
-        x1 = int(pos[1] * CAMERA_WIDTH)
-        x2 = int(pos[3] * CAMERA_WIDTH)
-        y1 = int(pos[0] * CAMERA_HEIGHT)
-        y2 = int(pos[2] * CAMERA_HEIGHT)
+	for obj in result:
+		pos = obj['pos']
+		clase = obj['id']
+		confidence = obj['confidence']
+		x1 = int(pos[1] * CAMERA_WIDTH)
+		x2 = int(pos[3] * CAMERA_WIDTH)
+		y1 = int(pos[0] * CAMERA_HEIGHT)
+		y2 = int(pos[2] * CAMERA_HEIGHT)
 	# Incrementar el conteo de vehiculos detectados
-        if clase == "car" or clase == "bus" or clase == "truck": 
-	    N_carros += 1
-	    cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
-	    text_1 = f'vehicle -- {confidence:.2%}'  
-	    text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
-	    cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
-	    cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
-    
-    cv2.imshow('Object Detection', frame)
-    return N_carros
+	if clase == "car" or clase == "bus" or clase == "truck": 
+		N_carros += 1
+		cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
+		text_1 = f'vehicle -- {confidence:.2%}'  
+		text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
+		cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
+		cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
 
+	cv2.imshow('Object Detection', frame)
+	return N_carros
+
+"""
 ### Definir la sincronizacion de los semaforos
 def Poco_trafico():
 	GPIO.output(green_led_pin, GPIO.HIGH)
@@ -144,7 +147,7 @@ def traffic_light_sequence(car_count):
 	    Mucho_trafico()
 	else:
 		Poco_trafico()
-
+"""
 
 ############################################################
 ######################## Main loop #########################
@@ -198,7 +201,8 @@ if __name__ == "__main__":
 
 			# Incrementar el contador de cuadros
 			frame_count += 1
-
+			
+			"""
 			# Mostrar los FPS en la consola
 			print(f"FPS: {fps:.2f}")
 
@@ -208,7 +212,8 @@ if __name__ == "__main__":
 				if label == 'car' or label == 'truck':
 					print(f"{label}: {count}")
 					traffic_light_sequence(N_carros)
-
+			"""
+			
 			# condicion de paro
 			key = cv2.waitKey(1)
 			if key == 27:  # esc
