@@ -7,17 +7,6 @@
 </head>
 <body>
     <h1>Video Stream from Raspberry Pi</h1>
-    <video id="video" controls autoplay></video>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
-    <script>
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-        socket.on('video_frame', function (frame) {
-            var blob = new Blob([frame], { type: 'video/h264' });
-            var video = document.getElementById('video');
-            video.src = URL.createObjectURL(blob);
-        });
-    </script>
+    <img id="video" src="{{ url_for('video_feed') }}" width="1280" height="720" />
 </body>
 </html>
