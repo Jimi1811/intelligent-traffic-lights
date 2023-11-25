@@ -202,18 +202,6 @@ if __name__ == "__main__":
 			# Incrementar el contador de cuadros
 			frame_count += 1
 			
-			"""
-			# Mostrar los FPS en la consola
-			print(f"FPS: {fps:.2f}")
-
-			# Mostrar el conteo y accionar LEDs
-			print("Conteo de objetos detectados:")
-			for label, count in object_count.items(): # dict_items([('Persona', 3), ('AutomÃ³vil', 5), ('CamiÃ³n', 2)])
-				if label == 'car' or label == 'truck':
-					print(f"{label}: {count}")
-					traffic_light_sequence(N_carros)
-			"""
-			
 			# condicion de paro
 			key = cv2.waitKey(1)
 			if key == 27:  # esc
