@@ -108,14 +108,14 @@ def display_result(result, frame, labels, fps, N_carros):
 		x2 = int(pos[3] * CAMERA_WIDTH)
 		y1 = int(pos[0] * CAMERA_HEIGHT)
 		y2 = int(pos[2] * CAMERA_HEIGHT)
-	# Incrementar el conteo de vehiculos detectados
-	if clase == "car" or clase == "bus" or clase == "truck": 
-		N_carros += 1
-		cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
-		text_1 = f'vehicle -- {confidence:.2%}'  
-		text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
-		cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
-		cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
+		# Incrementar el conteo de vehiculos detectados
+		if clase == "car" or clase == "bus" or clase == "truck": 
+			N_carros += 1
+			cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
+			text_1 = f'vehicle -- {confidence:.2%}'  
+			text_2 = f'FPS: {fps:.2f}'  # Agrega el FPS								   					 
+			cvzone.putTextRect(frame, text_1, (x1, y1), 1, 1)
+			cvzone.putTextRect(frame, text_2, (0, 0), 1, 1)
 
 	cv2.imshow('Object Detection', frame)
 	return N_carros
