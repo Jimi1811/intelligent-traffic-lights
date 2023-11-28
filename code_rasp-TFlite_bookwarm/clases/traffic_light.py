@@ -14,37 +14,14 @@ class TrafficLights:
         GPIO.output(self.amber_pin, state[1])
         GPIO.output(self.green_pin, state[2])
 
-    def traffic_light_pattern(self, num_vehicles, senal_inicio):
+    def traffic_light_pattern(self, num_vehicles):
         if num_vehicles > 5:
-            green_time = 45  
-            amber_time = 5
-            red_time = 50  
+            transition_time = 45
         else:
-            green_time = 25
-            amber_time = 5
-            red_time = 30
-        
-        if senal_inicio == "rojo":
-            self.set_lights([1, 0, 0])  # Red
-            time.sleep(red_time)
-            self.set_lights([0, 0, 1])  # Green
-            time.sleep(green_time)
-            self.set_lights([0, 1, 0])  # Amber
-            time.sleep(amber_time)
-        if senal_inicio == "green":
-            self.set_lights([0, 0, 1])  # Green
-            time.sleep(green_time)
-            self.set_lights([0, 1, 0])  # Amber
-            time.sleep(amber_time)
-            self.set_lights([1, 0, 0])  # Red
-            time.sleep(red_time)
-        if senal_inicio == "yellow":
-            self.set_lights([0, 1, 0])  # Amber
-            time.sleep(amber_time)
-            self.set_lights([1, 0, 0])  # Red
-            time.sleep(red_time)
-            self.set_lights([0, 0, 1])  # Green
-            time.sleep(green_time)
+            transition_time = 25
+
+        return transition_time
 
     def cleanup(self):
+        GPIO.cleanup()
         GPIO.cleanup()
