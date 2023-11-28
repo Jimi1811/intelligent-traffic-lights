@@ -1,69 +1,50 @@
 import RPi.GPIO as GPIO
 import time
 
-def seteo_pines():
-    global red_led_pin_1, red_led_pin_2
-    global yellow_led_pin_1, yellow_led_pin_2
-    global green_led_pin_1, green_led_pin_2
-	
-    # Definir pines del rasp (SEMAFORO 1)
-    red_led_pin_1 = 18 # semaforo rojo
-    yellow_led_pin_1 = 23 # semaforo ambar
-    green_led_pin_1 = 24 # semaforo verde
-	# Definir pines del rasp (SEMAFORO 2)
-    red_led_pin_2 = 17 # semaforo rojo
-    yellow_led_pin_2 = 27 # semaforo ambar
-    green_led_pin_2 = 22 # semaforo verde
-	
-    # Configurar pines
-    GPIO.setmode(GPIO.BCM) 
-	### semaforo 1
-    GPIO.setup(red_led_pin_1, GPIO.OUT) # seteo rojo
-    GPIO.setup(yellow_led_pin_1, GPIO.OUT) # seteo ambar
-    GPIO.setup(green_led_pin_1, GPIO.OUT) # seteo verde
-	### semaforo 2
-    GPIO.setup(red_led_pin_2, GPIO.OUT) # seteo rojo
-    GPIO.setup(yellow_led_pin_2, GPIO.OUT) # seteo ambar
-    GPIO.setup(green_led_pin_2, GPIO.OUT) # seteo verde
+class TrafficLights:
+    def __init__(self, red_pin, amber_pin, green_pin):
+        self.red_pin = red_pin # led rojo
+        self.amber_pin = amber_pin # Led ambar
+        self.green_pin = green_pin # Led verde
+        GPIO.setmode(GPIO.BCM) 
+        GPIO.setup([self.red_pin, self.amber_pin, self.green_pin], GPIO.OUT) 
 
-def sincronizar_trafico(temp):
-    ## semaforo 1 (VERDE) --- semaforo 2 (RED)
-    GPIO.output(green_led_pin_1, GPIO.HIGH)
-    GPIO.output(yellow_led_pin_1, GPIO.LOW)
-    GPIO.output(red_led_pin_1, GPIO.LOW)
-    GPIO.output(green_led_pin_2, GPIO.LOW)
-    GPIO.output(yellow_led_pin_2, GPIO.LOW)
-    GPIO.output(red_led_pin_2, GPIO.HIGH)
-    time.sleep(temp) 
-    ## semaforo 1 (AMBAR) --- semaforo 2 (RED)
-    GPIO.output(green_led_pin_1, GPIO.LOW)
-    GPIO.output(yellow_led_pin_1, GPIO.HIGH)
-    GPIO.output(red_led_pin_1, GPIO.LOW)
-    GPIO.output(green_led_pin_2, GPIO.LOW)
-    GPIO.output(yellow_led_pin_2, GPIO.LOW)
-    GPIO.output(red_led_pin_2, GPIO.HIGH)
-    time.sleep(5) 
-    ## semaforo 1 (RED) --- semaforo 2 (GREEN)
-    GPIO.output(green_led_pin_1, GPIO.LOW)
-    GPIO.output(yellow_led_pin_1, GPIO.LOW)
-    GPIO.output(red_led_pin_1, GPIO.HIGH)
-    GPIO.output(green_led_pin_2, GPIO.HIGH)
-    GPIO.output(yellow_led_pin_2, GPIO.LOW)
-    GPIO.output(red_led_pin_2, GPIO.LOW)
-    time.sleep(temp) 
-    ## semaforo 1 (RED) --- semaforo 2 (AMBAR)
-    GPIO.output(green_led_pin_1, GPIO.LOW)
-    GPIO.output(yellow_led_pin_1, GPIO.LOW)
-    GPIO.output(red_led_pin_1, GPIO.HIGH)
-    GPIO.output(green_led_pin_2, GPIO.LOW)
-    GPIO.output(yellow_led_pin_2, GPIO.HIGH)
-    GPIO.output(red_led_pin_2, GPIO.LOW)
-    time.sleep(5) 
-		
+    def set_lights(self, state):
+        GPIO.output(self.red_pin, state[0])
+        GPIO.output(self.amber_pin, state[1])
+        GPIO.output(self.green_pin, state[2])
 
-def sincronizar_LEDs(Num_vehiculos):
-    if Num_vehiculos > 5:
-        temp = 25
-    else:
-        temp = 45
-    sincronizar_trafico(temp)
+    def traffic_light_pattern(self, num_vehicles, senal_inicio):
+        if num_vehicles > 5:
+            green_time = 45  
+            amber_time = 5
+            red_time = 50  
+        else:
+            green_time = 25
+            amber_time = 5
+            red_time = 30
+        
+        if senal_inicio == "rojo":
+            self.set_lights([1, 0, 0])  # Red
+            time.sleep(red_time)
+            self.set_lights([0, 0, 1])  # Green
+            time.sleep(green_time)
+            self.set_lights([0, 1, 0])  # Amber
+            time.sleep(amber_time)
+        if senal_inicio == "green":
+            self.set_lights([0, 0, 1])  # Green
+            time.sleep(green_time)
+            self.set_lights([0, 1, 0])  # Amber
+            time.sleep(amber_time)
+            self.set_lights([1, 0, 0])  # Red
+            time.sleep(red_time)
+        if senal_inicio == "yellow":
+            self.set_lights([0, 1, 0])  # Amber
+            time.sleep(amber_time)
+            self.set_lights([1, 0, 0])  # Red
+            time.sleep(red_time)
+            self.set_lights([0, 0, 1])  # Green
+            time.sleep(green_time)
+
+    def cleanup(self):
+        GPIO.cleanup()
