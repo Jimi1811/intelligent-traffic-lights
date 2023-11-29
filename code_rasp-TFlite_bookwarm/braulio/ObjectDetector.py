@@ -11,6 +11,8 @@ from PIL import Image
 from picamera2 import Picamera2
 import time 
 
+global nivel
+
 ##########################################
 ########### crear clase detector #########
 ##########################################
@@ -41,9 +43,9 @@ class ObjectDetector:
         self.width = input_shape[2]
         self.input_index = input_details[0]['index']
 
-        self.last_time = time.time()
-        self.fps = 0
-        self.last_count_time = time.time()  # Initialize the last time counted
+        #self.last_time = time.time() # inicializa el tiempo
+        self.fps = 0 # incializa fps
+        # self.last_count_time = time.time() # Initialize the last time counted
 
     ## caargar etiquetas
     def load_labels(self):
@@ -75,9 +77,12 @@ class ObjectDetector:
         result = []
 
         for idx, score in enumerate(scores):
-            if score > 0.7:
-                result.append({'pos': positions[idx], 'id': classes[idx]})
+            if score > 0.3:
+                result.append({'pos': positions[idx], 'id': classes[idx], 'confidence': scores[idx]})
         return result
+    
+        ### los resultados de deteccion dan un porcentaje de 
+        ### confiabilidad entre el 30 y 50%
 
     ## mostrar resultados
     def display_result(self, result, frame, classes_of_interest=["bus", "truck", "car"]):
@@ -85,6 +90,7 @@ class ObjectDetector:
         for obj in result:
             pos = obj['pos']
             id = obj['id']
+            score = obj['confidence']
             d = self.labels[id]
             if d in classes_of_interest:
                 x1 = int(pos[1] * self.CAMERA_WIDTH)
@@ -92,40 +98,64 @@ class ObjectDetector:
                 y1 = int(pos[0] * self.CAMERA_HEIGHT)
                 y2 = int(pos[2] * self.CAMERA_HEIGHT)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
-                cvzone.putTextRect(frame, f'{d}', (x1, y1), 1, 1)
+                cvzone.putTextRect(frame, f'carro | {int(score*100)}%', (x1, y1), 1, 1)
         cv2.imshow('Object Detection', frame)
 
     ## ejecucion
     def run(self):
+        last_time = time.time() # inicializa el tiempo
+        Num_vehiculos = 0 # inicializar la cantidad de vehiculos
+        nivel = "bajo"
         while True:
+            ## Leer imagen y preprocesarla
             im = self.picam2.capture_array()
-            im = cv2.flip(im, -1)
+            #im = cv2.flip(im, -1)
             image = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
             image = image.resize((self.width, self.height))
 
-            current_time = time.time()
-            loop_time = current_time - self.last_time
+            ## obtener temporizador
+            current_time = time.time() # tiempo reciente
+            hora_actual = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) # hora actual
+            loop_time = current_time - last_time # tiempo de bucle
+
+            ## calcular fps
             self.fps = 0.9 * self.fps + 0.1 * (1 / loop_time)
+            #self.last_time = current_time
+            #current_time = last_time 
 
+            ## realizar detecciones
             top_result = self.process_image(image)
-            cv2.putText(im, f'FPS: {self.fps:.2f} | Vehicles: {len(top_result)}',
-                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
+            Num_vehiculos = len(top_result)
 
+            if int(loop_time) % 30 == 0: # cada 30 segundos
+                ## estimar el nivel de trafico
+                if Num_vehiculos < 5:
+                    nivel = "bajo"
+                elif Num_vehiculos < 8 and Num_vehiculos >= 5:
+                    nivel = "medio"
+                elif Num_vehiculos >= 8:
+                    nivel = "alto"
+
+                ## hacer visualizar la cantidad de FPS y la cantidad de vehiculos
+                cv2.putText(im, f'FPS: {self.fps:.2f} | Vehicles: {len(top_result)}',
+                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)    
+                ## hacer visualizar el nivel de trafico
+                cv2.putText(im, f'{nivel}',
+                        (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)    
+                ## dejar pasar 5 segundos
+                time.sleep(5)
+            
+            cv2.putText(im, f'Tiempo transcurrido: {int(loop_time)} segundos',
+                        (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(im, f'{hora_actual}',
+                        (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            
+            ## mostrar resultados
             self.display_result(top_result, im)
 
-            self.last_time = current_time
+            ## condicion de paro
             key = cv2.waitKey(1)
             if key == 27:  # esc
                 break
 
         cv2.destroyAllWindows()
-
-##########################################
-########### Main loop ####################
-##########################################
-
-if __name__ == "__main__":
-    model_path = '/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/efficientdet_lite0.tflite'
-    label_path = '/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm//braulio/labels.txt'
-    detector = ObjectDetector(model_path, label_path)
-    detector.run()
