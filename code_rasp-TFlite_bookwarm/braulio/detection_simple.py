@@ -1,3 +1,7 @@
+##########################################
+########### importar librerias ###########
+##########################################
+
 import re
 import cv2
 import numpy as np
@@ -6,6 +10,10 @@ import tensorflow.lite as tflite
 from PIL import Image
 from picamera2 import Picamera2
 import time
+
+##########################################
+########### configuraciones iniciales ####
+##########################################
 
 picam2 = Picamera2()
 picam2.preview_configuration.main.size = (480,320)
@@ -18,9 +26,18 @@ picam2.start()
 CAMERA_WIDTH = 480
 CAMERA_HEIGHT = 320
 
+##########################################
+########### leer modelos #################
+##########################################
+
 model_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/efficientdet_lite0.tflite'
 label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/labels.txt'
 
+##########################################
+########### definir funciones ###########
+##########################################
+
+## retorna etiquetas
 def load_labels(label_path):
     r"""Returns a list of labels"""
     with open(label_path) as f:
@@ -30,14 +47,14 @@ def load_labels(label_path):
             labels[int(m.group(1))] = m.group(2)
         return labels
 
-
+## retorna modelo
 def load_model(model_path):
     r"""Load TFLite model, returns a Interpreter instance."""
     interpreter = tflite.Interpreter(model_path=model_path)
     interpreter.allocate_tensors()
     return interpreter
 
-
+## detecta y devuelva una lista de detecciones
 def process_image(interpreter, image, input_index):
     r"""Process an image, Return a list of detected class ids and positions"""
     input_data = np.expand_dims(image, axis=0)  # expand to 4-dim
@@ -60,7 +77,7 @@ def process_image(interpreter, image, input_index):
             result.append({'pos': positions[idx], 'id': classes[idx]})
     return result
 
-
+## muestra en pantalla los carros detectados
 def display_result(result, frame, labels, classes_of_interest=["bus", "truck", "car"]):
     global last_count_time
     for obj in result:
@@ -75,6 +92,10 @@ def display_result(result, frame, labels, classes_of_interest=["bus", "truck", "
                cv2.rectangle(frame, (x1, y1), (x2, y2), (0,255,0),1)
                cvzone.putTextRect(frame,f'{d}',(x1,y1),1,1)
     cv2.imshow('Object Detection', frame)
+
+##########################################
+########### main loop ####################
+##########################################
 
 if __name__ == "__main__":
      model_path = 'efficientdet_lite0.tflite'
@@ -114,5 +135,8 @@ if __name__ == "__main__":
           if key == 27:  # esc
                break
 
+##########################################
+########### limpieza #####################
+##########################################
 
 cv2.destroyAllWindows()

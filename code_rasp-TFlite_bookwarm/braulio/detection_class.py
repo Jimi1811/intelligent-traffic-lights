@@ -1,3 +1,7 @@
+##########################################
+########### importar librerias ###########
+##########################################
+
 import re
 import cv2
 import numpy as np
@@ -5,9 +9,14 @@ import cvzone
 import tensorflow.lite as tflite
 from PIL import Image
 from picamera2 import Picamera2
-import time
+import time 
+
+##########################################
+########### crear clase detector #########
+##########################################
 
 class ObjectDetector:
+    ## inicializacion
     def __init__(self, model_path, label_path, camera_width=480, camera_height=320):
         self.picam2 = Picamera2()
         self.picam2.preview_configuration.main.size = (camera_width, camera_height)
@@ -36,6 +45,7 @@ class ObjectDetector:
         self.fps = 0
         self.last_count_time = time.time()  # Initialize the last time counted
 
+    ## caargar etiquetas
     def load_labels(self):
         with open(self.label_path) as f:
             labels = {}
@@ -44,11 +54,13 @@ class ObjectDetector:
                 labels[int(m.group(1))] = m.group(2)
             return labels
 
+    ## cargar modelo
     def load_model(self):
         interpreter = tflite.Interpreter(model_path=self.model_path)
         interpreter.allocate_tensors()
         return interpreter
 
+    ## procesar imagen
     def process_image(self, image):
         input_data = np.expand_dims(image, axis=0)
         self.interpreter.set_tensor(self.input_index, input_data)
@@ -63,10 +75,11 @@ class ObjectDetector:
         result = []
 
         for idx, score in enumerate(scores):
-            if score > 0.3:
+            if score > 0.7:
                 result.append({'pos': positions[idx], 'id': classes[idx]})
         return result
 
+    ## mostrar resultados
     def display_result(self, result, frame, classes_of_interest=["bus", "truck", "car"]):
         global last_count_time
         for obj in result:
@@ -82,6 +95,7 @@ class ObjectDetector:
                 cvzone.putTextRect(frame, f'{d}', (x1, y1), 1, 1)
         cv2.imshow('Object Detection', frame)
 
+    ## ejecucion
     def run(self):
         while True:
             im = self.picam2.capture_array()
@@ -105,6 +119,10 @@ class ObjectDetector:
                 break
 
         cv2.destroyAllWindows()
+
+##########################################
+########### Main loop ####################
+##########################################
 
 if __name__ == "__main__":
     model_path = '/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/efficientdet_lite0.tflite'
