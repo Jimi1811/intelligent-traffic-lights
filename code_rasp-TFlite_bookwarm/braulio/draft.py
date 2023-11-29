@@ -127,14 +127,13 @@ class ObjectDetector:
             top_result = self.process_image(image)
             Num_vehiculos = len(top_result)
 
-            """
-            if int(loop_time) % 20 == 0: # cada 20 segundos
+            if int(loop_time) % 20 == 0 and int(loop_time) != 0: # cada 20 segundos
                 ## estimar el nivel de trafico
-                if Num_vehiculos < 5:
+                if Num_vehiculos < 3:
                     nivel = "bajo"
-                elif Num_vehiculos < 8 and Num_vehiculos >= 5:
+                elif Num_vehiculos < 5 and Num_vehiculos >= 3:
                     nivel = "medio"
-                elif Num_vehiculos >= 8:
+                elif Num_vehiculos >= 5:
                     nivel = "alto"
             
                 ## hacer visualizar la cantidad de FPS y la cantidad de vehiculos
@@ -144,9 +143,8 @@ class ObjectDetector:
                 cv2.putText(im, f'{nivel}',
                         (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)    
                 ## dejar pasar 3 segundos
-                time.sleep(3000)
-            """
-
+                cv2.waitKey(3000)
+            
             cv2.putText(im, f'Tiempo transcurrido: {int(loop_time)} segundos',
                         (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             cv2.putText(im, f'{hora_actual}',

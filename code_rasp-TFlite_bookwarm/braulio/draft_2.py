@@ -1,7 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 from traffic_light import TrafficLights
-from ObjectDetector import nivel
+
+global nivel
 
 if __name__ == "__main__":
     traffic_lights_1 = TrafficLights(red_pin=17, amber_pin=27, green_pin=22)  # Definir los pines para el primer semáforo
@@ -13,17 +14,24 @@ if __name__ == "__main__":
     while True:
         try:
             if nivel == "bajo":
-                trans_time = 10
+                trans_time_1 = 30
+                trans_time_2 = 30
             elif nivel == "medio":
-                trans_time = 20
+                trans_time_1 = 40
+                trans_time_2 = 20
             elif nivel == "alto":
-                trans_time = 30
+                trans_time_1 = 50
+                trans_time_2 = 10
+
+            print(nivel)
+            print(trans_time_1)
+            print(trans_time_2)
 
             traffic_lights_1.set_lights([1, 0, 0])  # Red
             semaforo_1 = "rojo"
             traffic_lights_2.set_lights([0, 0, 1])  # Green
             semaforo_2 = "verde"
-            time.sleep(trans_time)
+            time.sleep(trans_time_1)
             traffic_lights_1.set_lights([1, 0, 0])  # Red
             semaforo_1 = "rojo"
             traffic_lights_2.set_lights([0, 1, 0])  # Ambar
@@ -33,7 +41,7 @@ if __name__ == "__main__":
             semaforo_1 = "verde"
             traffic_lights_2.set_lights([1, 0, 0])  # Red
             semaforo_2 = "rojo"
-            time.sleep(trans_time)
+            time.sleep(trans_time_2)
             traffic_lights_1.set_lights([0, 1, 0])  # Ambar
             semaforo_1 = "ambar"
             traffic_lights_2.set_lights([1, 0, 0])  # Red
