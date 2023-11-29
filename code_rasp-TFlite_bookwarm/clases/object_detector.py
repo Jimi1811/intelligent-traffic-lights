@@ -4,7 +4,7 @@ import numpy as np
 import cvzone
 import tensorflow.lite as tflite
 from PIL import Image
-from picamera2 import Picamera2
+from picamera import Picamera
 import time
 
 class ObjectDetector:
