@@ -16,9 +16,9 @@ class TrafficLights:
 
     def traffic_light_pattern(self, num_vehicles):
         if num_vehicles > 5:
-            transition_time = 45
+            transition_time = 55
         else:
-            transition_time = 25
+            transition_time = 10
 
         return transition_time
 

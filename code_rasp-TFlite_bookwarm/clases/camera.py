@@ -70,19 +70,20 @@ if __name__ == "__main__":
 
             # mostrar tiempo
             elapsed_time = time.time() - start_time ## tiempo transcurrido
-            mins, secs = divmod(elapsed_time, 60) ## obtener minutos y segundos
-            hours, mins = divmod(mins, 60) ## obtener horas y minutos
-            timer_str = "{:02}:{:02}:{:02}".format(int(hours), int(mins), int(secs)) ## tiempo en formato string
-            print("\rTiempo transcurrido: {}".format(timer_str), end="") 
-            time.sleep(1) 
+            # mins, secs = divmod(elapsed_time, 60) ## obtener minutos y segundos
+            # hours, mins = divmod(mins, 60) ## obtener horas y minutos
+            # timer_str = "{:02}:{:02}:{:02}".format(int(hours), int(mins), int(secs)) ## tiempo en formato string
+            # print("\rTiempo transcurrido: {}".format(timer_str), end="") 
+            # time.sleep(1) 
 
-            # deteccion de objetos cada 30 segundos
-            if elapsed_time >= 30: 
+            # deteccion de objetos cada 75 segundos
+            if elapsed_time >= 75: 
                 start_time = 0
                 objects = object_detector.process_image(image, input_index) # Ejecuta la lógica de detección de objetos
                 object_detector.display_result(objects, image) # muestra los resultados
                 cv2.putText(im, f'FPS: {fps:.2f} | Vehicles: {len(objects)}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
-                
+                Num_vehículos = len(objects)
+
             # calculo de fps
             fps = object_detector.calculate_fps() # calcula los fps
             cv2.putText(im, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
