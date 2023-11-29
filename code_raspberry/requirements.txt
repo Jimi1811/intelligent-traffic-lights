@@ -1,7 +1,0 @@
-flask 
-picamera2
-tensorflow
-cvzone
-opencv-python
-sockets
-simplejpeg
