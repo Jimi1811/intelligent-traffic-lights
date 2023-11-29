@@ -1,7 +1,3 @@
-##########################################
-########### importar librerias ###########
-##########################################
-
 import re
 import cv2
 import numpy as np
@@ -12,10 +8,6 @@ from picamera2 import Picamera2
 import time 
 
 global nivel
-
-##########################################
-########### crear clase detector #########
-##########################################
 
 class ObjectDetector:
     ## inicializacion
