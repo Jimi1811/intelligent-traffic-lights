@@ -80,8 +80,6 @@ def display_result(result, frame, labels, classes_of_interest=["bus", "truck", "
     cv2.imshow('Object Detection', frame)
 
 if __name__ == "__main__":
-     model_path = 'efficientdet_lite0.tflite'
-     label_path = 'labels.txt'
      interpreter = load_model(model_path)
      labels = load_labels(label_path)
      
