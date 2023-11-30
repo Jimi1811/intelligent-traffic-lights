@@ -14,7 +14,7 @@ encoder = H264Encoder(1000000)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(("0.0.0.0", 10001))
+    sock.bind(("0.0.0.0", 8000))
     sock.listen()
 
     picam2.encoders = encoder
