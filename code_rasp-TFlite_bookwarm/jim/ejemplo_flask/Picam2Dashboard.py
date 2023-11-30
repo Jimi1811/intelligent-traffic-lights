@@ -17,8 +17,8 @@ picam2.start()
 def generate_frames():
     """Generate frames for the video feed."""
     while True:
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = picam2.capture_array("main")
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         if frame is not None:
             frame = cv2.resize(frame, (640, 480))
             _, jpeg = cv2.imencode('.jpg', frame)
