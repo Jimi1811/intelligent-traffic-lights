@@ -17,6 +17,7 @@ picam2.start()
 def generate_frames():
     """Generate frames for the video feed."""
     while True:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = picam2.capture_array("main")
         if frame is not None:
             frame = cv2.resize(frame, (640, 480))
@@ -35,26 +36,6 @@ def video_feed():
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/update_camera_settings', methods=['POST'])
-def update_camera_settings():
-    """Update camera settings."""
-    resolution = request.form.get('resolution')
-    framerate = int(request.form.get('framerate'))
-    compression = int(request.form.get('compression'))
-    picam2.options["resolution"] = tuple(map(int, resolution.split('x')))
-    picam2.options["framerate"] = framerate
-    picam2.options["quality"] = compression
-    return '', 204
-
-@app.route('/camera_settings')
-def camera_settings():
-    """Provide current camera settings."""
-    settings = {
-        'resolution': 'x'.join(map(str, picam2.options["resolution"])),
-        'framerate': picam2.options["framerate"],
-        'compression': picam2.options["quality"]
-    }
-    return jsonify(settings)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
