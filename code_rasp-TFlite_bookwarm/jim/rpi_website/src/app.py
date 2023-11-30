@@ -22,19 +22,6 @@ def index():
     return render_template('index.html')
 
 def generate():
-    while True:
-        with output.condition:
-            output.condition.wait()
-            frame = output.frame
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(generate(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
-
-if __name__ == '__main__':
     picam2 = Picamera2()
     picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
     
@@ -42,6 +29,19 @@ if __name__ == '__main__':
     picam2.start_recording(JpegEncoder(), FileOutput(output))
 
     try:
-        app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)
+        while True:
+            with output.condition:
+                output.condition.wait()
+                frame = output.frame
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     finally:
         picam2.stop_recording()
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)
