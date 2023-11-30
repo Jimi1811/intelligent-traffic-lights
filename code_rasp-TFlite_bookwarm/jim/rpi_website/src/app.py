@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Response
 import io
-import picamera2
+from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 from threading import Condition
@@ -37,7 +37,7 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    picam2 = picamera2.Picamera2()
+    picam2 = Picamera2()
     picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
     picam2.start_recording(JpegEncoder(), FileOutput(output))
 
