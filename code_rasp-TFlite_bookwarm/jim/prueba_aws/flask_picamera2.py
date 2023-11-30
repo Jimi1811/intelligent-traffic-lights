@@ -67,5 +67,5 @@ api.add_resource(VideoFeed, '/cam')
 
 
 if __name__ == '__main__':
-	app.run(debug = False, host = '0.0.0.0', port=5000)
- 	print("Hola")
+    app.run(debug = False, host = '0.0.0.0', port=5000)
+    print("Hola")
