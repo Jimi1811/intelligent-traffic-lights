@@ -15,6 +15,7 @@ picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
 
+
 CAMERA_WIDTH = 480
 CAMERA_HEIGHT = 320
 
