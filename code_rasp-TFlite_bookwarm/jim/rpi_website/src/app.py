@@ -23,8 +23,11 @@ def index():
 
 def generate():
     picam2 = Picamera2()
-    picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
-    
+    picam2.preview_configuration.main.size = (480, 320)
+    picam2.preview_configuration.main.format = "RGB888"
+    picam2.preview_configuration.controls.FrameRate = 30
+    picam2.preview_configuration.align()
+    picam2.configure("preview")    
     output = StreamingOutput()  
     picam2.start_recording(JpegEncoder(), FileOutput(output))
 
