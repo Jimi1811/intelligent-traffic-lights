@@ -198,13 +198,14 @@
     <script>
         var videoStream = document.getElementById('videoStream');
 
-        function updateImage() {
-            videoStream.src = "{{ url_for('video_feed') }}" + '?rand=' + Math.random();
-            setTimeout(updateImage, 100); // Actualizar cada 100 ms (ajusta según sea necesario)
+        function updateVideo() {
+            videoStream.src = "/video_feed"; // Esta ruta debe coincidir con la definida en app.py
+            setTimeout(updateVideo, 1000); // Actualizar cada segundo (ajusta según sea necesario)
         }
 
-        updateImage();
+        updateVideo();
     </script>
+
 
 </body>
 

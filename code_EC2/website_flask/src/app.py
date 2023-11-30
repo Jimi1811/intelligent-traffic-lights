@@ -2,6 +2,8 @@
 # render_template: renderizar archivos en html 
 # request, flash, redirect, url_for -> para agregar usuario
 from flask import Flask, render_template, request,flash, redirect, url_for, session
+from flask import Response
+import requests
 
 # Crear aplicacion
 app = Flask(__name__, static_folder='static')
@@ -39,17 +41,22 @@ def menu():
     # Corra un texto
     return render_template('menu.html')
 
-# Crear ruta principal
 @app.route('/service')
- # Crear inicio
 def service():
-    # Corra un texto
     return render_template('service.html')
 
-# Ruta para error
-# @app.errorhandler(404)
-# def page_not_found(error):
-#     return render_template('error.html')
+def generate():
+    # Cambia la URL al enlace externo de tu stream mpegts
+    video_url = "http://proxy18.rt3.io:38817"
+    response = requests.get(video_url, stream=True)
+
+    for chunk in response.iter_content(chunk_size=1024):
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + chunk + b'\r\n\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Crear funcion
 if __name__ == '__main__':
