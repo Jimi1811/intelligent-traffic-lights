@@ -16,6 +16,7 @@ from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 
 class ObjectDetector:
+
     ## inicializacion
     def __init__(self, model_path, label_path, camera_width=480, camera_height=320):
         self.picam2 = Picamera2()
@@ -23,12 +24,11 @@ class ObjectDetector:
         self.picam2.preview_configuration.main.format = "RGB888"
         self.picam2.preview_configuration.controls.FrameRate = 30
         self.picam2.preview_configuration.align()
-        self.picam2.configure("preview", self.picam2.create_video_configuration(main={"size": (640, 480)}))
-
-        self.output = StreamingOutput()
-        self.picam2.start_recording(JpegEncoder(), FileOutput(self.output))
-
+        self.picam2.configure("preview")
+        self.picam2.configure(self.picam2.create_video_configuration(main={"size": (640, 480)}))
         self.picam2.start()
+        output = StreamingOutput()
+        self.picam2.start_recording(JpegEncoder(), FileOutput(output))
 
         self.CAMERA_WIDTH = camera_width
         self.CAMERA_HEIGHT = camera_height
@@ -114,8 +114,7 @@ class ObjectDetector:
             # Iniciar el servidor de transmisión
             address = ('', 8000)
             server = StreamingServer(address, StreamingHandler)
-            server_thread = threading.Thread(target=server.serve_forever)
-            server_thread.start()
+            server.serve_forever()
 
             while True:
                 ## Leer imagen y preprocesarla
@@ -151,8 +150,6 @@ class ObjectDetector:
 
         finally:
             # Detener el servidor de transmisión y la grabación de video
-            server.shutdown()
-            server.server_close()
             self.picam2.stop_recording()
 
         cv2.destroyAllWindows()
