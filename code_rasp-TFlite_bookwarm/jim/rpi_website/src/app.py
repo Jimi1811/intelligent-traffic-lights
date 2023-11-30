@@ -7,10 +7,14 @@ from threading import Condition
 
 class CameraHandler:
     def __init__(self):
-        self.picam2 = Picamera2()
-        self.picam2.configure(self.picam2.create_video_configuration(main={"size": (640, 480)}))
+        self.picam2 = None
         self.output = StreamingOutput()
-        self.picam2.start_recording(JpegEncoder(), FileOutput(self.output))
+
+    def configure_camera(self):
+        if not self.picam2:
+            self.picam2 = Picamera2()
+            self.picam2.configure(self.picam2.create_video_configuration(main={"size": (640, 480)}))
+            self.picam2.start_recording(JpegEncoder(), FileOutput(self.output))
 
     def get_frame(self):
         with self.output.condition:
@@ -19,7 +23,8 @@ class CameraHandler:
         return frame
 
     def stop_recording(self):
-        self.picam2.stop_recording()
+        if self.picam2:
+            self.picam2.stop_recording()
 
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
@@ -45,6 +50,7 @@ class WebApp:
     def generate(self):
         try:
             while True:
+                self.camera_handler.configure_camera()
                 frame = self.camera_handler.get_frame()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
