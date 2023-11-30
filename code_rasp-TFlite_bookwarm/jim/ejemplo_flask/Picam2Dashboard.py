@@ -4,7 +4,6 @@ import time
 import io
 import numpy as np
 import cv2
-import psutil
 
 app = Flask(__name__)
 
@@ -35,19 +34,6 @@ def video_feed():
     """Provide the video feed."""
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@app.route('/stats')
-def stats():
-    """Provide system and camera stats."""
-    stats = {
-        'cpu_percent': psutil.cpu_percent(),
-        'cpu_temp': psutil.sensors_temperatures()['cpu_thermal'][0].current,
-        'ram_usage': psutil.virtual_memory().percent,
-        'network_usage': psutil.net_io_counters().bytes_sent + psutil.net_io_counters().bytes_recv,
-        'resolution': 'x'.join(map(str, picam2.options["resolution"])),
-        'framerate': picam2.options["framerate"]
-    }
-    return jsonify(stats)
 
 @app.route('/update_camera_settings', methods=['POST'])
 def update_camera_settings():
