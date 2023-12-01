@@ -1,6 +1,6 @@
 services:
   app:
-    build: ./website
+    build: /website
     links:
       - db
     ports:
@@ -16,5 +16,5 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
-      - /home/ubuntu/intelligent-traffic-lights/code_EC2/database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - /home/ubuntu/intelligent-traffic-lights/code_EC2/data:/var/lib/mysql
+      - /database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /data:/var/lib/mysql
