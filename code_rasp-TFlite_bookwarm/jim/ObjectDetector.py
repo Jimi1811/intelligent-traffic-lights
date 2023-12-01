@@ -9,7 +9,14 @@ import time
 
 global nivel
 
+from video_stream import StreamingOutput, StreamingHandler, StreamingServer
+
+# Configuracion para webserver
+from picamera2.encoders import JpegEncoder
+from picamera2.outputs import FileOutput
+
 class ObjectDetector:
+
     ## inicializacion
     def __init__(self, model_path, label_path, camera_width=480, camera_height=320):
         self.picam2 = Picamera2()
@@ -18,7 +25,10 @@ class ObjectDetector:
         self.picam2.preview_configuration.controls.FrameRate = 30
         self.picam2.preview_configuration.align()
         self.picam2.configure("preview")
+        self.picam2.configure(self.picam2.create_video_configuration(main={"size": (640, 480)}))
         self.picam2.start()
+        output = StreamingOutput()
+        self.picam2.start_recording(JpegEncoder(), FileOutput(output))
 
         self.CAMERA_WIDTH = camera_width
         self.CAMERA_HEIGHT = camera_height
@@ -94,62 +104,52 @@ class ObjectDetector:
         cv2.imshow('Object Detection', frame)
 
     ## ejecucion
+## ejecucion
     def run(self):
-        last_time = time.time() # inicializa el tiempo
-        Num_vehiculos = 0 # inicializar la cantidad de vehiculos
-        nivel = "bajo"
-        while True:
-            ## Leer imagen y preprocesarla
-            im = self.picam2.capture_array()
-            #im = cv2.flip(im, -1)
-            image = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
-            image = image.resize((self.width, self.height))
+        try:
+            last_time = time.time()  # inicializa el tiempo
+            Num_vehiculos = 0  # inicializar la cantidad de vehiculos
+            nivel = "bajo"
 
-            ## obtener temporizador
-            current_time = time.time() # tiempo reciente
-            hora_actual = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) # hora actual
-            loop_time = current_time - last_time # tiempo de bucle
+            # Iniciar el servidor de transmisión
+            address = ('', 8000)
+            server = StreamingServer(address, StreamingHandler)
+            server.serve_forever()
 
-            ## calcular fps
-            self.fps = 0.9 * self.fps + 0.1 * (1 / loop_time)
-            #self.last_time = current_time
-            #current_time = last_time 
+            while True:
+                ## Leer imagen y preprocesarla
+                im = self.picam2.capture_array()
+                # im = cv2.flip(im, -1)
+                image = Image.fromarray(cv2.cvtColor(im, cv2.COLOR_BGR2RGB))
+                image = image.resize((self.width, self.height))
 
-            ## realizar detecciones
-            top_result = self.process_image(image)
-            Num_vehiculos = len(top_result)
+                ## obtener temporizador
+                current_time = time.time()  # tiempo reciente
+                hora_actual = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())  # hora actual
+                loop_time = current_time - last_time  # tiempo de bucle
 
-            """
-            if int(loop_time) % 20 == 0: # cada 20 segundos
-                ## estimar el nivel de trafico
-                if Num_vehiculos < 5:
-                    nivel = "bajo"
-                elif Num_vehiculos < 8 and Num_vehiculos >= 5:
-                    nivel = "medio"
-                elif Num_vehiculos >= 8:
-                    nivel = "alto"
-            
-                ## hacer visualizar la cantidad de FPS y la cantidad de vehiculos
-                cv2.putText(im, f'FPS: {self.fps:.2f} | Vehicles: {len(top_result)}',
-                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)    
-                ## hacer visualizar el nivel de trafico
-                cv2.putText(im, f'{nivel}',
-                        (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)    
-                ## dejar pasar 3 segundos
-                time.sleep(3000)
-            """
+                ## calcular fps
+                self.fps = 0.9 * self.fps + 0.1 * (1 / loop_time)
 
-            cv2.putText(im, f'Tiempo transcurrido: {int(loop_time)} segundos',
-                        (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            cv2.putText(im, f'{hora_actual}',
-                        (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            
-            ## mostrar resultados
-            self.display_result(top_result, im)
+                ## realizar detecciones
+                top_result = self.process_image(image)
+                Num_vehiculos = len(top_result)
 
-            ## condicion de paro
-            key = cv2.waitKey(1)
-            if key == 27:  # esc
-                break
+                cv2.putText(im, f'Tiempo transcurrido: {int(loop_time)} segundos',
+                            (10, 250), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.putText(im, f'{hora_actual}',
+                            (10, 300), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+                ## mostrar resultados
+                self.display_result(top_result, im)
+
+                ## condicion de paro
+                key = cv2.waitKey(1)
+                if key == 27:  # esc
+                    break
+
+        finally:
+            # Detener el servidor de transmisión y la grabación de video
+            self.picam2.stop_recording()
 
         cv2.destroyAllWindows()

@@ -1,9 +1,10 @@
 import picamera2 #camera module for RPi camera
 from picamera2 import Picamera2
-from picamera2.encoders import JpegEncoder
+from picamera2.encoders import JpegEncoder, H264Encoder
 from picamera2.outputs import FileOutput, FfmpegOutput
 import io
 
+import subprocess
 from flask import Flask, Response
 from flask_restful import Resource, Api, reqparse, abort
 import atexit
@@ -33,6 +34,17 @@ class Camera:
 			self.streamOut.condition.wait()
 			self.frame = self.streamOut.frame
 		return self.frame
+
+	#doesnt do anything	
+	def start_recording(self):
+		print('recording started')
+		self.fileOut.start()
+		return True
+	
+	def stop_recording(self):
+		print('recording stopped')
+		self.fileOut.stop()
+		return True
 		
 		
 class StreamingOutput(io.BufferedIOBase):
@@ -61,11 +73,21 @@ class VideoFeed(Resource):
 		return Response(genFrames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+class StartRec(Resource):
+	def get(self):
+		camera.start_recording()
+		return {'Status': 'True'}
+		
+class StopRec(Resource):
+	def get(self):
+		camera.stop_recording()
+		return {'Status': 'True'}
 		
 api.add_resource(VideoFeed, '/cam')
+api.add_resource(StartRec, '/start_rec')
+api.add_resource(StopRec, '/stop_rec')
 # api.add_resource(convVid, '/picam/convert_vid/<ID>')
 
 
 if __name__ == '__main__':
-    app.run(debug = False, host = '0.0.0.0', port=5000)
-    print("Hola")
+	app.run(debug = False, host = '0.0.0.0', port=5000)

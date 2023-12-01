@@ -15,7 +15,7 @@ picam2.configure(video_config)
 encoder = H264Encoder(repeat=True, iperiod=15)
 
 # Create an FfmpegOutput for streaming to a network address (replace <ip-address> with the actual IP address)
-output1 = FfmpegOutput("-f mpegts udp://127.0.0.1:5000")
+output1 = FfmpegOutput("-f mpegts udp://3.16.218.231:5000")
 # Set timestamp for network streaming
 output1.timestamp = True
 
