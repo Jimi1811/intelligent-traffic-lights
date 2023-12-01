@@ -8,7 +8,7 @@ LABEL maintainer jim.fabian@utec.edu.pe
 RUN apt-get update && apt-get install -y python3 python3-pip git
 
 # Establece el directorio de trabajo
-WORKDIR /home/ubuntu/intelligent-traffic-lights/code_EC2/website
+WORKDIR /website
 
 COPY requirements.txt /website
 RUN pip3 install -r requirements.txt
