@@ -7,11 +7,10 @@ LABEL maintainer jim.fabian@utec.edu.pe
 # Actualiza la lista de paquetes e instala Python 3, pip y git
 RUN apt-get update && apt-get install -y python3 python3-pip git
 
-
 # Establece el directorio de trabajo
 WORKDIR /website
 
-# Instala las dependencias de la aplicación desde requirements.txt
+COPY requirements.txt /website
 RUN pip3 install -r requirements.txt
 
 # Expone el puerto 5000 para la aplicación Flask (ajusta según tus necesidades)
