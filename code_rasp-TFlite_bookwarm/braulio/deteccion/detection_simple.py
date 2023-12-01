@@ -18,8 +18,8 @@ picam2.start()
 CAMERA_WIDTH = 480
 CAMERA_HEIGHT = 320
 
-model_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/efficientdet_lite0.tflite'
-label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/labels.txt'
+model_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/modelos/efficientdet_lite0.tflite'
+label_path='/home/jim/intelligent-traffic-lights/code_rasp-TFlite_bookwarm/braulio/modelos/labels.txt'
 
 ## retorna etiquetas
 def load_labels(label_path):
@@ -79,8 +79,8 @@ def display_result(result, frame, labels, classes_of_interest=["bus", "truck", "
     cv2.imshow('Object Detection', frame)
 
 if __name__ == "__main__":
-     model_path = 'efficientdet_lite0.tflite'
-     label_path = 'labels.txt'
+     #model_path = 'efficientdet_lite0.tflite'
+     #label_path = 'labels.txt'
      interpreter = load_model(model_path)
      labels = load_labels(label_path)
      
