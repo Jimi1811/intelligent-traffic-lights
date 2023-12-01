@@ -3,10 +3,10 @@ import mysql.connector
 class DatabaseDAO:
     def __init__(self):
         self.connection = mysql.connector.connect(
-            host="mysql-container",  # Actualizar con config del mysql
+            host="localhost:3306",  # Actualizar con config del mysql
             user="root",
-            password="root_password",
-            database="mydb"
+            password="db_password",
+            database="semaphores"
         )
         self.cursor = self.connection.cursor()
 
