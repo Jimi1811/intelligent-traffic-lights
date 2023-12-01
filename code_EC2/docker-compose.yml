@@ -1,27 +1,20 @@
-version: '3'
-
 services:
-  mysql:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: db_password
-      MYSQL_DATABASE: semaphores
-      MYSQL_USER: db_user
-      MYSQL_PASSWORD: db_password
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./code_SQL_init/db_init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "3306:3306"
-
-  flask-app:
-    build:
-      context: .
-      dockerfile: Dockerfile-flask
-    depends_on:
-      - mysql
+  app:
+    build: ./website
+    links:
+      - db
     ports:
       - "5000:5000"
+    depends_on:
+      - db
 
-volumes:
-  mysql_data:
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - /database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - /data:/var/lib/mysql
