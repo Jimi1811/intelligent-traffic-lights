@@ -17,4 +17,4 @@ RUN pip3 install -r requirements.txt
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación Flask
-CMD python3 /website/src/app.py
+CMD python3 /home/ubuntu/intelligent-traffic-lights/code_EC2/website/src/app.py
