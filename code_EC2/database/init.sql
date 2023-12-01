@@ -52,31 +52,3 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-
--- Ejemplo 1
-INSERT INTO `db_smart_traffic_light`.`recordings` (`rpi_path`, `date`)
-VALUES ('/path/to/rpi1', '2023-12-01 12:30:00');
-
--- Ejemplo 2
-INSERT INTO `db_smart_traffic_light`.`recordings` (`rpi_path`, `date`)
-VALUES ('/path/to/rpi2', '2023-12-02 15:45:30');
-
--- Ejemplo 3
-INSERT INTO `db_smart_traffic_light`.`recordings` (`rpi_path`, `date`)
-VALUES ('/path/to/rpi3', '2023-12-03 08:10:15');
-
-
--- Ejemplo 1
-INSERT INTO `db_smart_traffic_light`.`intersections` 
-(`avenue_status_1`, `avenue_status_2`, `number_vehicles`, `traffic_level`, `recording_id`)
-VALUES ('Green', 'Red', 20, 'Low', 1);
-
--- Ejemplo 2
-INSERT INTO `db_smart_traffic_light`.`intersections` 
-(`avenue_status_1`, `avenue_status_2`, `number_vehicles`, `traffic_level`, `recording_id`)
-VALUES ('Red', 'Green', 15, 'Medium', 2);
-
--- Ejemplo 3
-INSERT INTO `db_smart_traffic_light`.`intersections` 
-(`avenue_status_1`, `avenue_status_2`, `number_vehicles`, `traffic_level`, `recording_id`)
-VALUES ('Yellow', 'Red', 25, 'High', 3);
