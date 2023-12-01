@@ -5,7 +5,7 @@ FROM ubuntu
 LABEL maintainer jim.fabian@utec.edu.pe
 
 # Actualiza la lista de paquetes e instala Python 3, pip y git
-RUN apt-get update && apt-get install -y python python-pip git
+RUN apt-get update && apt-get install -y python3 python3-pip git
 
 # Clona el repositorio privado utilizando un token de acceso personal (reemplaza 'TU_TOKEN' con tu PAT de GitHub)
 RUN git clone https://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@github.com/uteccognitive/2023-2-icc-python-flash-docker-Jimi1811.git /app
