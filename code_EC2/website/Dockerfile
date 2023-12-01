@@ -17,5 +17,4 @@ RUN pip3 install -r requirements.txt
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación Flask
-COPY app.py /website/src
-CMD python app.py
+CMD python src/app.py
