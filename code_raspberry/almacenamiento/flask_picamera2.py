@@ -1,4 +1,3 @@
-import picamera2 #camera module for RPi camera
 from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder, H264Encoder
 from picamera2.outputs import FileOutput, FfmpegOutput
