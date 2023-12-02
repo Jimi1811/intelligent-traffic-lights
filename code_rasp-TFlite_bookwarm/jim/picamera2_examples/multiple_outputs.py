@@ -16,7 +16,6 @@ encoder = H264Encoder(repeat=True, iperiod=15)
 
 # Create an FfmpegOutput for streaming to a network address (replace <ip-address> with the actual IP address)
 output1 = FfmpegOutput("-f mpegts udp://127.0.0.1:5000")
-# Set timestamp for network streaming
 output1.timestamp = True
 
 # Create a FileOutput for recording to a file
