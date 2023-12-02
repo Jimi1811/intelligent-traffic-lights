@@ -5,3 +5,4 @@ cvzone
 opencv-python
 sockets
 simplejpeg
+paho-mqtt
