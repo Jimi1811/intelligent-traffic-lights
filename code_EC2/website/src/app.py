@@ -3,6 +3,13 @@
 # request, flash, redirect, url_for -> para agregar usuario
 from flask import Flask, render_template, request,flash, redirect, url_for, session
 
+# Importar la clase RecordingsDAO
+from dao.DAOinter_rec import RecordingsDAO, IntersectionsDAO
+
+# Crear instancias de las clases DAO
+recordings_dao = RecordingsDAO()
+intersections_dao = IntersectionsDAO()
+
 # Crear aplicacion
 app = Flask(__name__, static_folder='static')
 
@@ -32,12 +39,13 @@ def contact():
     return render_template('contact.html')
 
 
-# Crear ruta principal
 @app.route('/menu')
- # Crear inicio
 def menu():
-    # Corra un texto
-    return render_template('menu.html')
+    # Obtener todas las grabaciones y todas las intersecciones
+    recordings = recordings_dao.get_all_recordings()
+    intersections = intersections_dao.get_all_intersections()
+
+    return render_template('menu.html', recordings=recordings, intersections=intersections)
 
 # Crear ruta principal
 @app.route('/service')
@@ -54,4 +62,4 @@ def service():
 # Crear funcion
 if __name__ == '__main__':
     # Correr programa, hacer debug true, especificar puerto (default: 5000)
-    app.run(port=3000,debug=True)
+    app.run(host='0.0.0.0', port=4000, debug=True, threaded=True)

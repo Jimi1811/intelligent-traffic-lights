@@ -1,12 +1,12 @@
-import mysql.connector
+import pymysql
 
 class DatabaseDAO:
     def __init__(self):
-        self.connection = mysql.connector.connect(
-            host="mysql-container",  # Actualizar con config del mysql
+        self.connection = pymysql.connect(
+            host="localhost",
             user="root",
-            password="root_password",
-            database="mydb"
+            password="Ubuntu@2023",
+            db="db_smart_traffic_light"
         )
         self.cursor = self.connection.cursor()
 
@@ -25,9 +25,9 @@ class RecordingsDAO(DatabaseDAO):
     def __init__(self):
         super().__init__()
 
-    def create_recording(self, recording_id, rpi_address, date):
-        query = "INSERT INTO recordings (recording_id, rpi_address, date) VALUES (%s, %s, %s)"
-        params = (recording_id, rpi_address, date)
+    def create_recording(self, rpi_path, date):
+        query = "INSERT INTO recordings (rpi_path, date) VALUES (%s, %s)"
+        params = (rpi_path, date)
         self.execute_query(query, params)
 
     def get_all_recordings(self):
@@ -39,9 +39,9 @@ class RecordingsDAO(DatabaseDAO):
         params = (recording_id,)
         return self.fetch_data(query, params)
 
-    def update_recording(self, recording_id, rpi_address, date):
-        query = "UPDATE recordings SET rpi_address = %s, date = %s WHERE recording_id = %s"
-        params = (rpi_address, date, recording_id)
+    def update_recording(self, recording_id, rpi_path, date):
+        query = "UPDATE recordings SET rpi_path = %s, date = %s WHERE recording_id = %s"
+        params = (rpi_path, date, recording_id)
         self.execute_query(query, params)
 
     def delete_recording(self, recording_id):
@@ -53,9 +53,9 @@ class IntersectionsDAO(DatabaseDAO):
     def __init__(self):
         super().__init__()
 
-    def create_intersection(self, intersection_id, avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id):
-        query = "INSERT INTO intersections (intersection_id, avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id) VALUES (%s, %s, %s, %s, %s, %s)"
-        params = (intersection_id, avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id)
+    def create_intersection(self, avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id):
+        query = "INSERT INTO intersections (avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id) VALUES (%s, %s, %s, %s, %s)"
+        params = (avenue_status_1, avenue_status_2, number_vehicles, traffic_level, recording_id)
         self.execute_query(query, params)
 
     def get_all_intersections(self):
