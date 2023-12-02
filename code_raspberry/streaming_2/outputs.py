@@ -6,7 +6,7 @@ picam2 = Picamera2()
 video_config = picam2.create_video_configuration()
 picam2.configure(video_config)
 encoder = H264Encoder(repeat=True, iperiod=15)
-output1 = FfmpegOutput("-f mpegts udp://<ip-address>:12345")
+output1 = FfmpegOutput("-f mpegts udp://127.0.0.1:7000")
 output2 = FileOutput()
 encoder.output = [output1, output2]
 # Start streaming to the network.
