@@ -3,7 +3,7 @@ import subprocess
 
 import prctl
 
-from .output import Output
+from output import Output
 
 
 class FfmpegOutput(Output):
