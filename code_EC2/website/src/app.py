@@ -4,7 +4,7 @@
 from flask import Flask, render_template, request,flash, redirect, url_for, session
 
 # Importar la clase RecordingsDAO
-from DAOinter_rec import RecordingsDAO
+from dao.DAOinter_rec import RecordingsDAO
 
 # Crear instancia de RecordingsDAO
 recordings_dao = RecordingsDAO()

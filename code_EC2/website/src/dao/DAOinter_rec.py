@@ -1,4 +1,6 @@
 import mysql.connector
+import pymysql
+
 
 class DatabaseDAO:
     def __init__(self):
