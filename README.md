@@ -91,10 +91,53 @@ La estructura del proyecto se divide en 2:
 
 7. Inicializar Docker-compose
    ```bash
-   docker compose up
-   ``` 
+   git clone https://github.com/Jimi1811/intelligent-traffic-lights.git
+   cd intelligent-traffic-lights
+   cd code_raspberry
+   rm -rf code_EC2 code_tests # eliminar codigos innecesarios
+   ```
+   
 8. Al inicializar los contenedores, tendrás conectado la base de datos y la página web. Para visualizarlos entra a un navegador e ingresa el <Public IPv4 addess>:4000.
 
+## Dentro de la Raspberry PI
 
+1. Instalar en un micro-SD "Raspberry OS - BookWorm". Recomendable por [Raspberry Image](https://www.raspberrypi.com/software/).
 
+2. Una vez instalado, clonar repositorio y eliminar la carpeta con el código para le EC2
+   ```bash
+   git clone https://github.com/Jimi1811/intelligent-traffic-lights.git
+   cd intelligent-traffic-lights
+   cd code_raspberry
+   rm -rf code_EC2 code_tests # eliminar codigos innecesarios
+   ```
 
+3. Crear entorno virtual e instalar los paquetes necesarios, ya que la nueva versión no permite instalar paquetes de Python directamente del usado por el sistema operativo.
+   
+   ```bash
+   python3 -m venv env --system-site-packages # Permite usar librerias ya instaladas. Necesario para Picamera2
+   source env/bin/activate
+   pip3 install -r  requirements.txt
+   ```
+
+4. Correr los siguientes códigos para tener las siguientes funciones:
+     - Almacenamiento constante cada 10 segundos:
+       ```bash
+       python3 almacenamiento/video_record.py
+       ```
+       
+     - Streaming en vivo:
+       ```bash
+       python3 streaming/src/app.py
+       ```
+       Se puede apreciar en una página web el video. Para ello se coloca en un navegador el IP de la raspberry seguido del puerto 8000.
+       
+     - Algoritmo para la detección de carros y patrón de semáforos
+         - Terminal 1:
+           ```bash
+           python3 main_carros_semaforo/detection_OS.py
+           ```
+           
+         - Terminal 2:
+           ```bash
+           python3 main_carros_semaforo/semaforo_OS.py
+           ```
