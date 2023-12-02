@@ -18,10 +18,18 @@ class Camera:
 	def __init__(self):
 		self.camera = picamera2.Picamera2()
 		self.camera.configure(self.camera.create_video_configuration(main={"size": (640, 480)}))
+  
 		self.encoder = JpegEncoder()
 		self.fileOut = FfmpegOutput('test2.mp4', audio=False) #StreamingOutput()
+		self.fileOut.timestamp = True
+
+  
 		self.streamOut = StreamingOutput()
 		self.streamOut2 = FileOutput(self.streamOut)
+		# Set timestamp for network streaming
+		self.streamOut2.timestamp = True
+
+  
 		self.encoder.output = [self.fileOut, self.streamOut2]
 		
 		self.camera.start_encoder(self.encoder) 
