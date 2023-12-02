@@ -6,6 +6,7 @@ from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 
 def record_video():
+    current_time = datetime.now()
     video_filename = current_time.strftime("%Y-%m-%d_%H-%M-%S.mp4")
 
     encoder = H264Encoder(10000000)
@@ -20,7 +21,6 @@ if __name__ == "__main__":
     video_config = picam2.create_video_configuration()
     picam2.configure(video_config)
 
-    current_time = datetime.now()
     while True:
         record_video()
         time.sleep(1)  # Wait for 1 second before starting the next recording
