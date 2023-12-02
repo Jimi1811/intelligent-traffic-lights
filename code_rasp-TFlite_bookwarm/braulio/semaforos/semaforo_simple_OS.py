@@ -10,20 +10,20 @@ GPIO.setwarnings(False)  # Desactiva las advertencias de GPIO
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BCM) 
     ## semaforo 1
-    GPIO.setup(27, GPIO.OUT) # semaforo rojo
-    GPIO.setup(17, GPIO.OUT) # semaforo ambar 
-    GPIO.setup(24, GPIO.OUT) # semaforo verde
-    rojo_1 = 27
-    ambar_1 = 17
-    verde_1 = 24
+    GPIO.setup(25, GPIO.OUT) # semaforo rojo
+    GPIO.setup(8, GPIO.OUT) # semaforo ambar 
+    GPIO.setup(7, GPIO.OUT) # semaforo verde
+    rojo_1 = 25
+    ambar_1 = 8
+    verde_1 = 7
     ## semaforo 2
-    GPIO.setup(5, GPIO.OUT) # semaforo rojo
-    GPIO.setup(12, GPIO.OUT) # semaforo ambar 
-    GPIO.setup(16, GPIO.OUT) # semaforo verde   
-    rojo_2 = 5
-    ambar_2 = 12
-    verde_2 = 16
-
+    GPIO.setup(20, GPIO.OUT) # semaforo ambar 
+    GPIO.setup(16, GPIO.OUT) # semaforo rojo
+    GPIO.setup(21, GPIO.OUT) # semaforo verde   
+    rojo_2 = 16
+    ambar_2 = 20
+    verde_2 = 21
+    
     ## inicialzar nivel
     nivel = "bajo"
 
