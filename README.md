@@ -5,7 +5,7 @@ El presente proyecto se embarca en el desarrollo de un sistema de semáforos int
 # Objetivos
 
 ## Objetivo general
-[] Diseñar e implementar un sistema mecatrónico de semáforos inteligentes junto a una base de datos y página web para una intersección de dos calles usando visión computacional.
+- [x] Diseñar e implementar un sistema mecatrónico de semáforos inteligentes junto a una base de datos y página web para una intersección de dos calles usando visión computacional.
 
 ## Objetivos específicos
 
@@ -63,19 +63,38 @@ La estructura del proyecto se divide en 2:
 ## Página web y base de datos
 
 1. Crea la instancia en AWS con el servicio EC2. Recomendamos que tenga 10 gb de almacenamiento, Ubuntu 22.04.
-2. Abrir los siguientes puertos en la sección de seguridad:
+
+2. Abrir los siguientes puertos en la sección de seguridad
    - SSH - TCP - 22 - 0.0.0.0/0
    - Custom TCP - TCP - 4000 - 0.0.0.0/0
    - Custom TCP - TCP - 5000 - 0.0.0.0/0
-3. Conéctate a la instancia. Desde tu terminal Linux:
+
+3. Conéctate a la instancia. Desde tu terminal Linux
    ```bash
    ssh -i key-<key_server>.pem ubuntu@<Public_IPv4_address>
    ```
-5. Una vez conectado, descargar el repositorio:
+
+4. Instalar Docker. [Enlace de referencia](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04)
+   
+5. Instalar pip3
+   ```bash
+   sudo apt install python3-pip
+   ```
+
+6. Una vez conectado, descargar el repositorio
    ```bash
    git clone https://github.com/Jimi1811/intelligent-traffic-lights.git
    cd intelligent-traffic-lights
+   cd code_EC2
    rm -rf code_raspberry code_tests # eliminar codigos innecesarios
    ```
-7. Instalar Docker. [Enlace de referencia](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-22-04)
-8. Instalar pip3
+
+7. Inicializar Docker-compose
+   ```bash
+   docker compose up
+   ``` 
+8. Al inicializar los contenedores, tendrás conectado la base de datos y la página web. Para visualizarlos entra a un navegador e ingresa el <Public IPv4 addess>:4000.
+
+
+
+
