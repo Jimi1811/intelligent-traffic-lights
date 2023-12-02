@@ -11,10 +11,10 @@ RUN apt-get update && apt-get install -y python3 python3-pip git
 WORKDIR /website
 
 COPY requirements.txt /website
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Expone el puerto 5000 para la aplicación Flask (ajusta según tus necesidades)
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación Flask
-CMD python3 /home/ubuntu/intelligent-traffic-lights/code_EC2/website/src/app.py
+CMD ["python3", "code_EC2/website/src/app.py"]
