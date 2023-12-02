@@ -6,7 +6,7 @@ from picamera2.encoders import H264Encoder
 from picamera2.outputs import FfmpegOutput
 
 def record_video():
-    video_filename = current_time.strftime("%Y-%m-%d_%H-%M.mp4")
+    video_filename = current_time.strftime("%Y-%m-%d_%H-%M-%S.mp4")
 
     encoder = H264Encoder(10000000)
     output = FfmpegOutput(video_filename, audio=True)
