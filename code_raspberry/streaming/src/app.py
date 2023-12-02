@@ -24,7 +24,7 @@ class Camera:
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         video_filename = f"{current_time}.mp4"
         self.file_out.filename = video_filename
-        self.camera.start_recording()
+        self.camera.start_recording(self.encoder, self.file_out)
 
     def stop_recording(self):
         self.camera.stop_recording()
