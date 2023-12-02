@@ -4,10 +4,11 @@
 from flask import Flask, render_template, request,flash, redirect, url_for, session
 
 # Importar la clase RecordingsDAO
-from dao.DAOinter_rec import RecordingsDAO
+from dao.DAOinter_rec.py import RecordingsDAO, IntersectionsDAO
 
-# Crear instancia de RecordingsDAO
+# Crear instancias de las clases DAO
 recordings_dao = RecordingsDAO()
+intersections_dao = IntersectionsDAO()
 
 # Crear aplicacion
 app = Flask(__name__, static_folder='static')
@@ -38,15 +39,13 @@ def contact():
     return render_template('contact.html')
 
 
-# Crear ruta principal
 @app.route('/menu')
- # Crear inicio
 def menu():
-    # Obtener todas las grabaciones desde la base de datos
+    # Obtener todas las grabaciones y todas las intersecciones
     recordings = recordings_dao.get_all_recordings()
+    intersections = intersections_dao.get_all_intersections()
 
-    # Renderizar la plantilla y pasar datos
-    return render_template('menu.html', recordings=recordings)
+    return render_template('menu.html', recordings=recordings, intersections=intersections)
 
 # Crear ruta principal
 @app.route('/service')

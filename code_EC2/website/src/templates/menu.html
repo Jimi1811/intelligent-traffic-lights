@@ -61,20 +61,22 @@
         <!-- Page Header End -->
 
 
+        <!-- Grabaciones -->
+        <h1 class="mb-5">Tabla de Grabaciones</h1>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Dirección</th>
-                    <th>Tiempo</th>
+                    <th>ID</th>
+                    <th>RPI Path</th>
+                    <th>Fecha y Hora</th>
                 </tr>
             </thead>
             <tbody>
                 {% for recording in recordings %}
                 <tr>
-                    <td>{{ recording[1] }}</td> <!-- Ruta del RPI -->
-                    <td>{{ recording[2] }}</td> <!-- Fecha y hora -->
-                    <!-- Puedes agregar más columnas según la estructura de tu tabla 'recordings' -->
+                    <td>{{ recording[0] }}</td>
+                    <td>{{ recording[1] }}</td>
+                    <td>{{ recording[2] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
