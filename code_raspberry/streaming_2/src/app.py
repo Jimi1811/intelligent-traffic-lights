@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Variables globales para almacenar el último frame recibido
 frame = None
-frame_lock = Lock()  # Utilizamos un Lock en lugar de un Thread
+frame_lock = Lock()
 
 def receive_frames():
     global frame
@@ -22,8 +22,9 @@ def receive_frames():
         data, _ = udp_socket.recvfrom(65507)  # Ajusta según el tamaño máximo de tus frames
         nparr = np.frombuffer(data, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        with frame_lock:
-            frame_lock.notify_all()
+        
+        frame_lock.acquire()
+        frame_lock.release()
 
 # Inicia el hilo para recibir frames
 receive_thread = Thread(target=receive_frames)
@@ -34,14 +35,14 @@ def generate():
     global frame_lock
 
     while True:
-        with frame_lock:
-            frame_lock.wait()
-            if frame is not None:
-                # Convierte el frame a formato JPEG para mostrar en la web
-                _, buffer = cv2.imencode('.jpg', frame)
-                frame_bytes = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
+        frame_lock.acquire()
+        if frame is not None:
+            # Convierte el frame a formato JPEG para mostrar en la web
+            _, buffer = cv2.imencode('.jpg', frame)
+            frame_bytes = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
+        frame_lock.release()
 
 @app.route('/')
 def index():
