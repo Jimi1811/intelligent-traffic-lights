@@ -16,7 +16,7 @@ api = Api(app)
 
 class Camera:
 	def __init__(self):
-		self.camera = picamera2.Picamera2()
+		self.camera = Picamera2()
 		self.camera.configure(self.camera.create_video_configuration(main={"size": (640, 480)}))
 		self.encoder = JpegEncoder()
 		self.fileOut = FfmpegOutput('test2.mp4', audio=False) #StreamingOutput()
