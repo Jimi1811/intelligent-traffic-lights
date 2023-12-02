@@ -22,7 +22,7 @@ def receive_frames():
         data, _ = udp_socket.recvfrom(65507)  # Ajusta según el tamaño máximo de tus frames
         nparr = np.frombuffer(data, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+
         frame_lock.acquire()
         frame_lock.release()
 
@@ -53,4 +53,4 @@ def video_feed():
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
