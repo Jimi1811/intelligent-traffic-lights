@@ -5,7 +5,7 @@ class DatabaseDAO:
         self.connection = pymysql.connect(
             host="localhost",
             user="root",
-            password="Ubuntu@2023",
+            password="jimihendrix1811",
             db="db_smart_traffic_light"
         )
         self.cursor = self.connection.cursor()
