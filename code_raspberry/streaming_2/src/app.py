@@ -2,13 +2,13 @@ from flask import Flask, render_template, Response
 import cv2
 import socket
 import numpy as np
-from threading import Thread
+from threading import Thread, Lock
 
 app = Flask(__name__)
 
 # Variables globales para almacenar el último frame recibido
 frame = None
-frame_lock = Thread()
+frame_lock = Lock()  # Utilizamos un Lock en lugar de un Thread
 
 def receive_frames():
     global frame
