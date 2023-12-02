@@ -12,10 +12,8 @@ from flask import Flask, render_template, Response
 import io
 from threading import Condition
 
-app = Flask(__name__)
-
 def record_video():
-    video_filename = current_time.strftime("%Y-%m-%d_%H-%M.mp4")
+    video_filename = current_time.strftime("%Y-%m-%d_%H-%M-%S.mp4")
 
     encoder = H264Encoder(10000000)
     output = FfmpegOutput(video_filename, audio=False)
