@@ -3,6 +3,12 @@
 # request, flash, redirect, url_for -> para agregar usuario
 from flask import Flask, render_template, request,flash, redirect, url_for, session
 
+# Importar la clase RecordingsDAO
+from DAOinter_rec import RecordingsDAO
+
+# Crear instancia de RecordingsDAO
+recordings_dao = RecordingsDAO()
+
 # Crear aplicacion
 app = Flask(__name__, static_folder='static')
 
@@ -36,8 +42,11 @@ def contact():
 @app.route('/menu')
  # Crear inicio
 def menu():
-    # Corra un texto
-    return render_template('menu.html')
+    # Obtener todas las grabaciones desde la base de datos
+    recordings = recordings_dao.get_all_recordings()
+
+    # Renderizar la plantilla y pasar datos
+    return render_template('menu.html', recordings=recordings)
 
 # Crear ruta principal
 @app.route('/service')

@@ -52,3 +52,9 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+INSERT INTO `db_smart_traffic_light`.`recordings` (`rpi_path`, `date`) VALUES
+('/path/to/recording1', '2023-11-30 08:15:00'), ('/path/to/recording2', '2023-11-30 12:30:00'),
+('/path/to/recording3', '2023-11-30 17:45:00');
+
+INSERT INTO `db_smart_traffic_light`.`intersections` (`avenue_status_1`, `avenue_status_2`, `number_vehicles`, `traffic_level`, `recording_id`) VALUES
+('Green', 'Red', 20, 'High', 1), ('Red', 'Green', 15, 'Medium', 2),('Yellow', 'Red', 10, 'Low', 3);
