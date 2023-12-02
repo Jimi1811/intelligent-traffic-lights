@@ -20,14 +20,20 @@ class Camera:
         self.camera.start_encoder(self.encoder)
         self.camera.start()
 
+        self.recording = False  # Agregamos un indicador de grabación
+
     def start_recording(self):
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        video_filename = f"{current_time}.mp4"
-        self.file_out.filename = video_filename
-        self.camera.start_recording(self.encoder, self.file_out)
+        if not self.recording:
+            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            video_filename = f"{current_time}.mp4"
+            self.file_out.filename = video_filename
+            self.camera.start_recording(self.encoder, self.file_out)
+            self.recording = True
 
     def stop_recording(self):
-        self.camera.stop_recording()
+        if self.recording:
+            self.camera.stop_recording()
+            self.recording = False
 
     def get_frame(self):
         self.camera.start()
